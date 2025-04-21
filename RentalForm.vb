@@ -84,11 +84,11 @@ Public Class RentalForm
     Function TotalDiscount() As Decimal
         Dim _totalDiscount As Decimal
         If Seniorcheckbox.Checked And AAAcheckbox.Checked Then
-            _totalDiscount = CDec(0.008)
+            _totalDiscount = CDec(0.08)
         ElseIf AAAcheckbox.Checked Then
-            _totalDiscount = CDec(0.005)
+            _totalDiscount = CDec(0.05)
         ElseIf Seniorcheckbox.Checked Then
-            _totalDiscount = CDec(0.003)
+            _totalDiscount = CDec(0.03)
         Else
             _totalDiscount = 0
         End If
