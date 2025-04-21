@@ -1,11 +1,12 @@
-﻿Option Explicit On
-Option Strict On
-Option Compare Text
-'Brandon Barrera
+﻿'Brandon Barrera
 'RCET 0226
 'Spring 2025
 'Car Rental
 'https://github.com/BrandLeBar/CarRental.git
+
+Option Explicit On
+Option Strict On
+Option Compare Text
 
 Imports System.Runtime.Remoting.Messaging
 
@@ -37,47 +38,86 @@ Public Class RentalForm
 
     Function CheckUserInput() As Boolean
         Dim valid As Boolean = True
+        Dim message As String
 
         If NameTextBox.Text = "" Then
-            MsgBox("Please enter your name")
+            message &= "Please enter your name" & vbNewLine
             NameTextBox.Focus()
             valid = False
-        ElseIf AddressTextBox.Text = "" Then
-            MsgBox("Please enter your street adress")
+        End If
+
+        If AddressTextBox.Text = "" Then
+            message &= "Please enter your street adress" & vbNewLine
             AddressTextBox.Focus()
             valid = False
-        ElseIf CityTextBox.Text = "" Then
-            MsgBox("Please enter a city")
+        End If
+
+        If CityTextBox.Text = "" Then
+            message &= "Please enter a city" & vbNewLine
             CityTextBox.Focus()
             valid = False
-        ElseIf StateTextBox.Text = "" Then
-            MsgBox("Please enter a State")
+        End If
+
+        If StateTextBox.Text = "" Then
+            message &= "Please enter a State" & vbNewLine
             StateTextBox.Focus()
             valid = False
-        ElseIf IsNumeric(ZipCodeTextBox.Text) = False Then
-            MsgBox("Please enter a valid zip code")
+        End If
+
+        If IsNumeric(ZipCodeTextBox.Text) = False Then
+            message &= "Please enter a valid zip code" & vbNewLine
             ZipCodeTextBox.Focus()
             valid = False
-        ElseIf IsNumeric(BeginOdometerTextBox.Text) = False Then
-            MsgBox("Please enter the starting mileage")
+        End If
+
+        If IsNumeric(BeginOdometerTextBox.Text) = True Then
+            If CInt(BeginOdometerTextBox.Text) < 0 Then
+                message &= "Starting miles cannot be negative." & vbNewLine
+                BeginOdometerTextBox.Focus()
+                valid = False
+            End If
+        ElseIf IsNumeric(BeginOdometerTextBox.text) = False Then
+            message &= "Please enter the starting mileage" & vbNewLine
             BeginOdometerTextBox.Focus()
             valid = False
+        End If
+
+        If IsNumeric(EndOdometerTextBox.Text) = True Then
+
+            If CInt(EndOdometerTextBox.Text) < 0 Then
+                message &= "Ending miles cannot be negative." & vbNewLine
+                EndOdometerTextBox.Focus()
+                valid = False
+            End If
+            Try
+                If CInt(BeginOdometerTextBox.Text) > CInt(EndOdometerTextBox.Text) Then
+                    message &= "YOU CANNOT DRIVE NEGATIVE MILES!!!" & vbNewLine
+                    BeginOdometerTextBox.Focus()
+                    valid = False
+                End If
+            Catch ex As Exception
+                valid = False
+            End Try
         ElseIf IsNumeric(EndOdometerTextBox.Text) = False Then
-            MsgBox("Please enter the ending mileage")
+            message &= "Please enter the ending mileage" & vbNewLine
             EndOdometerTextBox.Focus()
             valid = False
-        ElseIf CInt(BeginOdometerTextBox.Text) > CInt(EndOdometerTextBox.Text) Then
-            MsgBox("YOU CANNOT DRIVE NEGATIVE MILES!!!")
-            valid = False
-        ElseIf IsNumeric(DaysTextBox.Text) = False Then
-            MsgBox("Please enter a valid amount of days 1 - 45")
+        End If
+
+        If IsNumeric(DaysTextBox.Text) = False Then
+            message &= "Please enter a valid amount of days 1 - 45" & vbNewLine
             DaysTextBox.Focus()
             valid = False
         ElseIf CInt(DaysTextBox.Text) < 1 Or CInt(DaysTextBox.Text) > 45 Then
-            MsgBox("Please enter a valid amount of days 1 - 45")
+            message &= "Please enter a valid amount of days 1 - 45" & vbNewLine
             DaysTextBox.Focus()
             valid = False
         End If
+
+        If Not valid Then
+            MsgBox(message)
+        End If
+
         Return valid
     End Function
 
@@ -185,7 +225,7 @@ Public Class RentalForm
         Dim totalMileage As Decimal = MileageCounter(, True)
         Dim totalCharged As Decimal = TotalChargedCounter(, True)
 
-        MsgBox($"Customers: {totalCustomers} {vbNewLine} Total Mileage: {totalMileage} {vbNewLine} Total Charged: {totalCharged}")
+        MsgBox($"Customers: {totalCustomers} {vbNewLine} Total Mileage: {totalMileage} Mi {vbNewLine} Total Charged: {totalCharged:C}")
     End Sub
 
     Private Sub ClearButton_Click(sender As Object, e As EventArgs) Handles ClearButton.Click, ClearToolStripMenuItem.Click, ClearToolStripMenuItem1.Click
